@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SIGACAR</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="site-shell">
+        <header class="sigacar-header">
+            <div class="header-main">
+                <a class="brand" asp-controller="Home" asp-action="Index">SIGACAR</a>
+                <a class="signup" asp-controller="Associados" asp-action="Create">Cadastre-se</a>
+                <form class="login-strip" method="get" asp-controller="Home" asp-action="Index">
+                    <label>Login <input name="login" /></label>
+                    <label>Password <input name="password" type="password" /></label>
+                    <button type="submit">OK</button>
+                </form>
+            </div>
+            <div class="header-sub">
+                <span>Sistema de Gerenciamento de Aluguel de Carros On-line</span>
+                <a href="#">Esqueceu sua senha?</a>
+            </div>
+            <nav class="menu-tabs">
+                <a asp-controller="Home" asp-action="Index">Home</a>
+                <a asp-controller="Associados" asp-action="Index">Dados Pessoais</a>
+                <a asp-controller="Veiculos" asp-action="Index">Veiculos</a>
+                <a asp-controller="Reservas" asp-action="Index">Reserva</a>
+                <a asp-controller="Categorias" asp-action="Index">Tarifas</a>
+                <a asp-controller="Perfil" asp-action="Index">Perfil</a>
+                <a asp-controller="Contratos" asp-action="Index">Contratos</a>
+                <a asp-controller="Empregados" asp-action="Index">Empregados</a>
+            </nav>
+        </header>
+        <main class="page">
+            @RenderBody()
+        </main>
+    </div>
+</body>
+</html>

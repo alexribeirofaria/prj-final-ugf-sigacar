@@ -1,0 +1,9 @@
+@model IEnumerable<Empregado>
+<h1>Empregados</h1>
+<p><a class="button primary" asp-action="Create">Cadastrar empregado</a></p>
+<table><thead><tr><th>Nome</th><th>E-mail</th><th>CPF</th><th>Codigo</th><th>Master</th><th></th></tr></thead><tbody>
+@foreach (var item in Model)
+{
+    <tr><td>@item.Nome</td><td>@item.Email</td><td>@item.Cpf</td><td>@item.CodigoIdentificacao</td><td>@(item.Master ? "Sim" : "Nao")</td><td class="row-actions"><a asp-action="Edit" asp-route-id="@item.Id">Alterar</a><a asp-action="Delete" asp-route-id="@item.Id">Excluir</a></td></tr>
+}
+</tbody></table>

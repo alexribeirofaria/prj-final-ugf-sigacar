@@ -1,0 +1,24 @@
+@model Veiculo
+@using System.Collections.Generic
+@{
+    var categorias = (IEnumerable<Categoria>)ViewBag.Categorias;
+    var categoria = Model == null ? null : categorias.FirstOrDefault(c => c.Id == Model.CategoriaId);
+}
+@if (Model == null)
+{
+    <h1>Veiculo nao localizado</h1>
+}
+else
+{
+    <h1>@Model.Modelo - @Model.Placa</h1>
+    <div class="details">
+        <p><span class="car-thumb car-@Model.Id large" title="@Model.Modelo">@Model.Modelo</span></p>
+        <p><strong>Fabricante:</strong> @Model.Fabricante</p>
+        <p><strong>Marca:</strong> @Model.Marca</p>
+        <p><strong>Ano:</strong> @Model.Ano</p>
+        <p><strong>Categoria:</strong> @categoria?.Descricao</p>
+        <p><strong>Tarifa diaria:</strong> @categoria?.PrecoDiario.ToString("C")</p>
+    </div>
+    <a class="button primary" asp-controller="Reservas" asp-action="Create">Reservar</a>
+    <a class="button" asp-action="Edit" asp-route-id="@Model.Id">Alterar</a>
+}

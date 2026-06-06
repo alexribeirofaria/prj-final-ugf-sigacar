@@ -1,0 +1,38 @@
+@model PerfilQuestionario
+@using System.Collections.Generic
+@{
+    var associados = (IEnumerable<Associado>)ViewBag.Associados;
+    var resultado = (PerfilResultado)ViewBag.Resultado;
+}
+<h1>Perfil nebuloso do associado</h1>
+<section class="grid two">
+    <form asp-action="Index" method="post" class="form-grid small">
+        <div asp-validation-summary="All" class="validation"></div>
+        <label>Associado
+            <select asp-for="AssociadoId">
+                @foreach (var associado in associados)
+                {
+                    <option value="@associado.Id">@associado.Nome</option>
+                }
+            </select>
+        </label>
+        <label>Idade <input asp-for="Idade" type="number" /></label>
+        <label>Salario <input asp-for="Salario" type="number" step="0.01" /></label>
+        <label>Anos de CNH <input asp-for="AnosCarteira" type="number" /></label>
+        <div class="form-actions"><button class="primary">Gerar perfil</button></div>
+    </form>
+    <div class="result">
+        @if (resultado == null)
+        {
+            <h2>Classificacao</h2>
+            <p>Preencha o questionario para calcular Basic, Advanced ou Master.</p>
+        }
+        else
+        {
+            <h2>@resultado.Perfil</h2>
+            <p class="score">@resultado.Pontuacao pontos</p>
+            <p>Basic @resultado.Basic | Advanced @resultado.Advanced | Master @resultado.Master</p>
+            <p>@resultado.Recomendacao</p>
+        }
+    </div>
+</section>

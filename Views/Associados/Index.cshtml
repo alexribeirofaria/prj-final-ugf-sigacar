@@ -1,0 +1,20 @@
+@model IEnumerable<Associado>
+<h1>Associados</h1>
+<form class="toolbar" method="get">
+    <input name="busca" placeholder="Nome, e-mail ou CPF" />
+    <select name="ordem"><option value="nome">Nome</option><option value="email">E-mail</option><option value="cpf">CPF</option></select>
+    <button>Consultar</button>
+    <a class="button primary" asp-action="Create">Cadastrar</a>
+</form>
+<table>
+    <thead><tr><th>ID</th><th>Nome</th><th>E-mail</th><th>CPF</th><th>Perfil</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td><td>@item.Nome</td><td>@item.Email</td><td>@item.Cpf</td><td>@item.Perfil</td>
+            <td class="row-actions"><a asp-action="Details" asp-route-id="@item.Id">Ver</a><a asp-action="Edit" asp-route-id="@item.Id">Alterar</a><a asp-action="Delete" asp-route-id="@item.Id">Excluir</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

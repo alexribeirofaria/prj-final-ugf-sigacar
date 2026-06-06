@@ -1,0 +1,30 @@
+@model ReservaFormViewModel
+<h1>@(Model.Reserva.Id == 0 ? "Cadastrar reserva" : "Alterar reserva")</h1>
+<form asp-action="Save" method="post" class="form-grid small">
+    <div asp-validation-summary="All" class="validation"></div>
+    <input asp-for="Reserva.Id" type="hidden" />
+    <label>Associado
+        <select asp-for="Reserva.AssociadoId">
+            @foreach (var associado in Model.Associados)
+            {
+                <option value="@associado.Id">@associado.Nome - @associado.Cpf</option>
+            }
+        </select>
+    </label>
+    <label>Veiculo
+        <select asp-for="Reserva.VeiculoId">
+            @foreach (var veiculo in Model.Veiculos)
+            {
+                <option value="@veiculo.Id">@veiculo.Placa - @veiculo.Modelo</option>
+            }
+        </select>
+    </label>
+    <label>Cidade retirada <input asp-for="Reserva.CidadeRetirada" /></label>
+    <label>Estado retirada <input asp-for="Reserva.EstadoRetirada" /></label>
+    <label>Cidade devolucao <input asp-for="Reserva.CidadeDevolucao" /></label>
+    <label>Estado devolucao <input asp-for="Reserva.EstadoDevolucao" /></label>
+    <label>Retirada <input asp-for="Reserva.Retirada" type="datetime-local" /></label>
+    <label>Devolucao <input asp-for="Reserva.Devolucao" type="datetime-local" /></label>
+    <label>Desconto <input asp-for="Reserva.Desconto" type="number" step="0.01" /></label>
+    <div class="form-actions"><button class="primary">Confirmar reserva</button><a class="button" asp-action="Index">Voltar</a></div>
+</form>

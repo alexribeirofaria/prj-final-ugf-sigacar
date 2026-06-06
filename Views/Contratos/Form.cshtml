@@ -1,0 +1,20 @@
+@model ContratoFormViewModel
+<h1>Fechar contrato</h1>
+<form asp-action="Save" method="post" class="form-grid small">
+    <div asp-validation-summary="All" class="validation"></div>
+    <label>Reserva
+        <select asp-for="ReservaId">
+            @foreach (var reserva in Model.Reservas)
+            {
+                <option value="@reserva.Id">Reserva #@reserva.Id - @reserva.Retirada.ToString("dd/MM/yyyy")</option>
+            }
+        </select>
+    </label>
+    <label>Forma de pagamento
+        <select asp-for="FormaPagamento" asp-items="Html.GetEnumSelectList<FormaPagamento>()"></select>
+    </label>
+    <label>Numero do cartao <input asp-for="NumeroCartao" /></label>
+    <label>Codigo de seguranca <input asp-for="CodigoSeguranca" /></label>
+    <label>Observacao <textarea asp-for="Observacao"></textarea></label>
+    <div class="form-actions"><button class="primary">Confirmar pagamento e contrato</button><a class="button" asp-action="Index">Voltar</a></div>
+</form>

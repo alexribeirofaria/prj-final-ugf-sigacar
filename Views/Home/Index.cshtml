@@ -1,0 +1,55 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Inicio";
+}
+<section class="classic-panel home-table">
+    <h1>Veiculos em destaque</h1>
+    <div class="classic-content pale">
+        <table>
+            <thead><tr><th>Foto</th><th>Grupo</th><th>Veiculo</th><th>Diaria</th><th>Semanal</th><th>Mensal</th></tr></thead>
+            <tbody>
+            @foreach (var veiculo in Model.Veiculos)
+            {
+                var categoria = Model.Categorias.FirstOrDefault(c => c.Id == veiculo.CategoriaId);
+                <tr>
+                    <td><span class="car-thumb car-@veiculo.Id" title="@veiculo.Modelo">@veiculo.Modelo</span></td>
+                    <td>@categoria?.Codigo</td>
+                    <td>@veiculo.Modelo</td>
+                    <td>@categoria?.PrecoDiario.ToString("C")</td>
+                    <td>@categoria?.PrecoSemanal.ToString("C")</td>
+                    <td>@categoria?.PrecoMensal.ToString("C")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="grid two">
+    <div class="classic-panel">
+        <h2>Reservas recentes</h2>
+        <table>
+            <thead><tr><th>Codigo</th><th>Retirada</th><th>Status</th></tr></thead>
+            <tbody>
+            @foreach (var reserva in Model.Reservas.Take(6))
+            {
+                var fechado = Model.Contratos.Any(c => c.ReservaId == reserva.Id);
+                <tr><td>#@reserva.Id</td><td>@reserva.Retirada.ToString("dd/MM/yyyy HH:mm")</td><td>@(fechado ? "Contrato fechado" : "Reservada")</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="classic-panel">
+        <h2>Resumo</h2>
+        <div class="metrics">
+            <div><strong>@Model.Veiculos.Count</strong><span>Veiculos</span></div>
+            <div><strong>@Model.Associados.Count</strong><span>Associados</span></div>
+            <div><strong>@Model.Reservas.Count</strong><span>Reservas</span></div>
+            <div><strong>@Model.Contratos.Count</strong><span>Contratos</span></div>
+        </div>
+        <div class="actions">
+            <a class="button primary" asp-controller="Reservas" asp-action="Create">Nova reserva</a>
+            <a class="button" asp-controller="Associados" asp-action="Create">Novo associado</a>
+        </div>
+    </div>
+</section>

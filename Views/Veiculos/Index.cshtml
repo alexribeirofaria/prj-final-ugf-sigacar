@@ -1,0 +1,18 @@
+@model IEnumerable<Veiculo>
+@using System.Collections.Generic
+@{
+    var categorias = (IEnumerable<Categoria>)ViewBag.Categorias;
+}
+<h1>Consulta de veiculos</h1>
+<form class="toolbar" method="get">
+    <select name="ordem"><option value="categoria">Categoria</option><option value="preco">Preco</option><option value="placa">Placa</option></select>
+    <button>Ordenar</button>
+    <a class="button primary" asp-action="Create">Cadastrar veiculo</a>
+</form>
+<table><thead><tr><th>Foto</th><th>Placa</th><th>Fabricante</th><th>Modelo</th><th>Ano</th><th>Categoria</th><th>Diaria</th><th></th></tr></thead><tbody>
+@foreach (var item in Model)
+{
+    var categoria = categorias.FirstOrDefault(c => c.Id == item.CategoriaId);
+    <tr><td><span class="car-thumb car-@item.Id" title="@item.Modelo">@item.Modelo</span></td><td>@item.Placa</td><td>@item.Fabricante</td><td>@item.Modelo</td><td>@item.Ano</td><td>@categoria?.Descricao</td><td>@categoria?.PrecoDiario.ToString("C")</td><td class="row-actions"><a asp-action="Details" asp-route-id="@item.Id">Ver</a><a asp-action="Edit" asp-route-id="@item.Id">Alterar</a><a asp-controller="Reservas" asp-action="Create">Reservar</a></td></tr>
+}
+</tbody></table>

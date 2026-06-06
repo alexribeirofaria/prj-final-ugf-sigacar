@@ -1,0 +1,95 @@
+FROM mcr.microsoft.com/dotnet/sdk:3.1
+
+# Ferramentas do sistema
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g; s|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list \
+    && sed -i '/buster-updates/d' /etc/apt/sources.list \
+    && apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get install -y \
+    git \
+    curl \
+    wget \
+    unzip \
+    vim \
+    zsh \
+    sudo \
+    sqlite3 \
+    nano \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+ARG EZA_VERSION=0.23.4
+RUN curl -fsSL "https://github.com/eza-community/eza/releases/download/v${EZA_VERSION}/eza_x86_64-unknown-linux-musl.tar.gz" \
+    | tar -xzf - -C /usr/local/bin \
+    && chmod +x /usr/local/bin/eza
+
+
+
+    
+# Usuário dev (não root)
+ARG USERNAME=developer
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Ferramentas globais .NET
+RUN dotnet tool install --global dotnet-ef --version 3.1.* \
+    && dotnet tool install --global dotnet-watch \
+    && dotnet tool install --global dotnet-outdated-tool --version 4.4.0
+
+# Adiciona tools ao PATH
+ENV PATH="$PATH:/root/.dotnet/tools:/home/developer/.dotnet/tools"
+
+# Hot reload via dotnet watch
+ENV DOTNET_USE_POLLING_FILE_WATCHER=1
+ENV DOTNET_RUNNING_IN_CONTAINER=true
+# Desabilita telemetria
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+
+# ==========================================
+# Shell do usuário rstudio:
+#   - venv sempre ativo ao abrir qualquer terminal
+#   - aliases e prompt colorido mostrando (venv)
+#
+# .bashrc      → shell interativo (docker exec -it container bash)
+# .bash_profile → shell de login  (VS Code Dev Containers usa bash -l)
+# ==========================================
+RUN cat > /home/${USERNAME}/.bashrc <<'RSTUDIOEOF'
+# Ativa o venv automaticamente
+source /opt/venv/bin/activate
+
+export PATH="/opt/venv/bin:$PATH"
+
+# Aliases
+alias cls='clear'
+alias py='python3'
+alias ll='eza -l -h --group --icons'
+alias la='eza -la -hs --group'
+alias lt='eza --tree --level=2 --group'
+
+ls() {
+    command eza -la --group --group-directories-first "$@"
+}
+
+# Prompt: (venv) rstudio:/caminho$
+PS1='\[\e[0;32m\](venv)\[\e[0m\] \[\e[1;34m\]\u\[\e[0m\]:\[\e[1;36m\]\w\[\e[0m\]\$ '
+RSTUDIOEOF
+
+# .bash_profile carrega .bashrc — cobre shell de login do VS Code
+RUN cat > /home/${USERNAME}/.bash_profile <<'PROFILEEOF'
+if [ -f ~/.bashrc ]; then
+    source ~/.bashrc
+fi
+PROFILEEOF
+
+RUN chown ${USERNAME}:${USERNAME} \
+    /home/${USERNAME}/.bashrc \
+    /home/${USERNAME}/.bash_profile
+
+
+WORKDIR /workspace
+
+USER $USERNAME

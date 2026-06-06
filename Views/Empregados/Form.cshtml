@@ -1,0 +1,18 @@
+@model Empregado
+<h1>@(Model.Id == 0 ? "Cadastrar empregado" : "Alterar empregado")</h1>
+<form asp-action="Save" method="post" class="form-grid">
+    <div asp-validation-summary="All" class="validation"></div>
+    <input asp-for="Id" type="hidden" />
+    <label>Nome <input asp-for="Nome" /></label>
+    <label>E-mail <input asp-for="Email" /></label>
+    <label>CPF <input asp-for="Cpf" /></label>
+    <label>Telefone <input asp-for="Telefone" /></label>
+    <label>Endereco <input asp-for="Endereco" /></label>
+    <label>Cidade <input asp-for="Cidade" /></label>
+    <label>Estado <input asp-for="Estado" /></label>
+    <label>Data nascimento <input asp-for="DataNascimento" type="date" /></label>
+    <label>Codigo <input asp-for="CodigoIdentificacao" /></label>
+    <label>Senha <input asp-for="Senha" type="password" /></label>
+    <label class="check"><input asp-for="Master" /> Perfil master</label>
+    <div class="form-actions"><button class="primary">Salvar</button><a class="button" asp-action="Index">Voltar</a></div>
+</form>

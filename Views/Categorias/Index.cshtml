@@ -1,0 +1,9 @@
+@model IEnumerable<Categoria>
+<h1>Categorias e tarifas</h1>
+<p><a class="button primary" asp-action="Create">Cadastrar categoria</a></p>
+<table><thead><tr><th>Codigo</th><th>Descricao</th><th>Diaria</th><th>Semanal</th><th>Mensal</th><th>Estoque</th><th></th></tr></thead><tbody>
+@foreach (var item in Model)
+{
+    <tr><td>@item.Codigo</td><td>@item.Descricao</td><td>@item.PrecoDiario.ToString("C")</td><td>@item.PrecoSemanal.ToString("C")</td><td>@item.PrecoMensal.ToString("C")</td><td>@item.QuantidadeEstoque</td><td class="row-actions"><a asp-action="Edit" asp-route-id="@item.Id">Alterar</a><a asp-action="Delete" asp-route-id="@item.Id">Excluir</a></td></tr>
+}
+</tbody></table>

@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .docker/Dockerfile.dev
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+    container_name: dotnet-dev
+    volumes:
+      - ..:/workspace      
+      - dotnet-nuget:/home/developer/.nuget   # cache de pacotes NuGet
+      - dotnet-tools:/home/developer/.dotnet  # tools globais persistidas
+    working_dir: /workspace/src
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+      - DOTNET_CLI_TELEMETRY_OPTOUT=1
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - BUILDKIT_STEP_LOG_MAX_SIZE=-1
+      - CONNECTION_STRING=Data Source=/workspace/src/data/app.db
+    ports:
+      - "5000:5000"   # HTTP
+      - "5001:5001"   # HTTPS (opcional)
+    stdin_open: true  # mantém o container vivo
+    tty: true
+    command: dotnet watch run --project App.csproj
+    networks:
+      - dev-network
+
+  # SQLite browser — opcional, acesse em http://localhost:8080
+  sqlite-web:
+    image: coleifer/sqlite-web
+    container_name: sqlite-browser
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../src/data:/data
+    environment:
+      - SQLITE_DATABASE=/data/app.db
+    networks:
+      - dev-network
+    profiles:
+      - tools   # só sobe com: docker compose --profile tools up
+
+volumes:
+  dotnet-nuget:
+  dotnet-tools:
+
+networks:
+  dev-network:
+    driver: bridge

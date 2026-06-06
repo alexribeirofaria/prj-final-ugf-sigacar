@@ -1,0 +1,25 @@
+@model Veiculo
+@using System.Collections.Generic
+@{
+    var categorias = (IEnumerable<Categoria>)ViewBag.Categorias;
+}
+<h1>@(Model.Id == 0 ? "Cadastrar veiculo" : "Alterar veiculo")</h1>
+<form asp-action="Save" method="post" class="form-grid small">
+    <div asp-validation-summary="All" class="validation"></div>
+    <input asp-for="Id" type="hidden" />
+    <label>Placa <input asp-for="Placa" /></label>
+    <label>Fabricante <input asp-for="Fabricante" /></label>
+    <label>Marca <input asp-for="Marca" /></label>
+    <label>Modelo <input asp-for="Modelo" /></label>
+    <label>Ano <input asp-for="Ano" type="number" /></label>
+    <label>Categoria
+        <select asp-for="CategoriaId">
+            @foreach (var categoria in categorias)
+            {
+                <option value="@categoria.Id">@categoria.Codigo - @categoria.Descricao</option>
+            }
+        </select>
+    </label>
+    <label class="check"><input asp-for="Ativo" /> Ativo para locacao</label>
+    <div class="form-actions"><button class="primary">Salvar</button><a class="button" asp-action="Index">Voltar</a></div>
+</form>

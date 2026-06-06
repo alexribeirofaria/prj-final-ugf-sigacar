@@ -1,0 +1,22 @@
+@model IEnumerable<Contrato>
+@using System.Collections.Generic
+@{
+    var reservas = (IEnumerable<Reserva>)ViewBag.Reservas;
+    var associados = (IEnumerable<Associado>)ViewBag.Associados;
+    var veiculos = (IEnumerable<Veiculo>)ViewBag.Veiculos;
+}
+<h1>Contratos</h1>
+<form class="toolbar" method="get">
+    <input name="situacao" placeholder="Situacao" />
+    <button>Consultar</button>
+    <a class="button primary" asp-action="Create">Fechar contrato</a>
+</form>
+<table><thead><tr><th>Codigo</th><th>Associado</th><th>Veiculo</th><th>Pagamento</th><th>Total</th><th>Status</th></tr></thead><tbody>
+@foreach (var item in Model)
+{
+    var reserva = reservas.FirstOrDefault(r => r.Id == item.ReservaId);
+    var associado = reserva == null ? null : associados.FirstOrDefault(a => a.Id == reserva.AssociadoId);
+    var veiculo = reserva == null ? null : veiculos.FirstOrDefault(v => v.Id == reserva.VeiculoId);
+    <tr><td>#@item.Id</td><td>@associado?.Nome</td><td>@veiculo?.Placa</td><td>@item.FormaPagamento</td><td>@item.Total.ToString("C")</td><td>@item.Status</td></tr>
+}
+</tbody></table>

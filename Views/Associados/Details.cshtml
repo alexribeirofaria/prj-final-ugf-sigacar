@@ -1,0 +1,18 @@
+@model Associado
+@if (Model == null)
+{
+    <h1>Associado nao localizado</h1>
+}
+else
+{
+    <h1>@Model.Nome</h1>
+    <div class="details">
+        <p><strong>E-mail:</strong> @Model.Email</p>
+        <p><strong>CPF:</strong> @Model.Cpf</p>
+        <p><strong>CNH:</strong> @Model.Cnh - validade @Model.ValidadeCnh.ToString("dd/MM/yyyy")</p>
+        <p><strong>Endereco:</strong> @Model.Endereco, @Model.Cidade/@Model.Estado</p>
+        <p><strong>Perfil:</strong> @Model.Perfil (@Model.PontuacaoPerfil pontos)</p>
+    </div>
+    <a class="button primary" asp-action="Edit" asp-route-id="@Model.Id">Alterar</a>
+    <a class="button" asp-action="Index">Voltar</a>
+}

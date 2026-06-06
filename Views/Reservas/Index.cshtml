@@ -1,0 +1,20 @@
+@model IEnumerable<Reserva>
+@using System.Collections.Generic
+@{
+    var associados = (IEnumerable<Associado>)ViewBag.Associados;
+    var veiculos = (IEnumerable<Veiculo>)ViewBag.Veiculos;
+}
+<h1>Reservas</h1>
+<form class="toolbar" method="get">
+    <input name="busca" placeholder="CPF ou placa" />
+    <button>Consultar</button>
+    <a class="button primary" asp-action="Create">Nova reserva</a>
+</form>
+<table><thead><tr><th>Codigo</th><th>Associado</th><th>Veiculo</th><th>Retirada</th><th>Devolucao</th><th></th></tr></thead><tbody>
+@foreach (var item in Model)
+{
+    var associado = associados.FirstOrDefault(a => a.Id == item.AssociadoId);
+    var veiculo = veiculos.FirstOrDefault(v => v.Id == item.VeiculoId);
+    <tr><td>#@item.Id</td><td>@associado?.Nome</td><td>@veiculo?.Placa - @veiculo?.Modelo</td><td>@item.Retirada.ToString("dd/MM/yyyy HH:mm")</td><td>@item.Devolucao.ToString("dd/MM/yyyy HH:mm")</td><td class="row-actions"><a asp-controller="Contratos" asp-action="Create" asp-route-reservaId="@item.Id">Fechar contrato</a><a asp-action="Edit" asp-route-id="@item.Id">Alterar</a><a asp-action="Delete" asp-route-id="@item.Id">Cancelar</a></td></tr>
+}
+</tbody></table>
